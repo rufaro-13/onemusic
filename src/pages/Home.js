@@ -6,8 +6,8 @@ import { useNavigate } from "react-router-dom";
 function Home() {
 
     const navigate = useNavigate();
-  const userData = JSON.parse(sessionStorage.getItem("userData"));
-  const username = userData?.username;
+/*   const userData = JSON.parse(sessionStorage.getItem("userData")); */
+  /* const username = userData?.username; */
 
   useEffect(() => {
     const loggedIn = sessionStorage.getItem("loggedIn");

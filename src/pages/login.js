@@ -1,20 +1,32 @@
 "use client";
 import React from "react";
 import { useState } from "react";
-import $ from "jquery";
-import axios from "axios";
+import { initializeApp } from 'firebase/app';
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import {  Label, TextInput } from "flowbite-react";
+import * as firebase from 'firebase/app';
+import { getAnalytics } from "firebase/analytics";
 
+const firebaseConfig = {
+    apiKey: "AIzaSyApeljgdOjZ651k8a-1ppCWNImHYvcjrmk",
+    authDomain: "onemusic-f0b73.firebaseapp.com",
+    projectId: "onemusic-f0b73",
+    storageBucket: "onemusic-f0b73.appspot.com",
+    messagingSenderId: "583930565232",
+    appId: "1:583930565232:web:7acd0f9503943214761ab5",
+    measurementId: "G-FYLV9F3N27"
+  };
+  
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
 export default function Login(){
-    
-    /* const [email, setEmail] = useState(""); */ 
+
+    firebase.initializeApp();
      const [result, setResult] = useState("");
      const [email, setEmail] = useState("");
      const [password, setPassword] = useState("");
-    /* const handleChange = (e) => {
-        setEmail(e.target.value);
-    }; */
- 
+    
 
     const handleEmail = (event) => {
         setEmail(event.target.value);
@@ -25,42 +37,34 @@ export default function Login(){
       };
     const handleSubmit = (e) => {
         e.preventDefault();
-       /*  axios
-        .post("http://localhost/api/login.php", {
-          email: email,
-          password: password,
-        })
-        .then((response) => {
-            console.log(response);
-            if (response.data.status === "success") {
-              sessionStorage.setItem("loggedIn", true);
-              sessionStorage.setItem(
-                "userData",
-                JSON.stringify(response.data.data)
-              );
-    
-              window.location.href = "/home";
-            } else {
-                window.location.href = "/home";
-            }
-        })
-        .catch((error) => {
-          console.error(error);
-        });
- */
-        const form = $(e.target);
-        $.ajax({
-            type: "POST",
-            url: form.attr("action"),
-            data: form.serialize(),
-            success(data) {
-              setResult(data);
-               window.location.href='/home'
-            },
-        });
+      
     };
+
+    const auth = getAuth();
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed in 
+        const user = userCredential.user;
+
+        if(user!==0)
+              {sessionStorage.setItem("clickedImage",user); 
+             return ( 
+          /*  navigate('/destination'); */
+          window.location.href = '/home' )}
+        
+
+        window.location.href = '/home' 
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+      });
+    
+
+
   return (
     <section className="mt-5 max-h-screen">
+      
       <div className="container h-full px-6 py-2">
         <div className=" shadow-lg bg-gray-200 flex h-dvh justify-items-center w-2/3 md:px-5 pt-10 item-stretch ">
           {/* <!-- Left column container with background--> */}
@@ -181,7 +185,7 @@ export default function Login(){
                         </a></div>
                         {/* </TERipple> */}
                     </form>
-                    <h1>{result}</h1>
+                    
                     </div>
             </div>
         </div>
