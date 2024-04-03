@@ -1,6 +1,7 @@
 "use client";
 /* import { Card } from "flowbite-react"; */
 import React from 'react'
+import { useEffect,useState } from 'react';
 import { BsFillFileMusicFill } from "react-icons/bs";
 import { IconContext } from "react-icons";
 import { initializeApp } from "firebase/app";
@@ -14,21 +15,38 @@ const app = initializeApp(firebaseConfig);
 
 var user =sessionStorage.getItem("loggedUser")
 const db = getFirestore(app);
-let querySnapshot = await getDocs(collection(db, "currentUser", user,"favourites")); 
+
 // Query a reference to a subcollection
+
  
- function Home() {
+export default  function Home() {
  
+ const [dataToShow, setData] = useState([]); 
+  useEffect(() => {
+    let isMounted = true;
   
+    const doFetch = async () => {
+  let querySnapshot =await  getDocs(collection(db, "currentUser", user,"favourites")); 
   const data = [];
   querySnapshot.forEach((doc) => {
     // doc.data() is never undefined for query doc snapshots
     //console.log(doc.id, " => ", doc.data());
 
-    data.push({ name: doc.data().name, song: doc.data().song, date: doc.data().date})
+    data.push({ name: doc.data().name, song: doc.data().song, date: doc.data().date});
+if (isMounted) setData(data);
   }); 
-  //setData(data);
+};
+  doFetch() // start the async work
+  .catch((err) => {
+    if (!isMounted) return; // unmounted, ignore.
+    // TODO: Handle errors in your component
+    console.error("failed to fetch data", err);
+  });
 
+return () => {
+  isMounted = false;
+};
+}, []);
   function play(song) {
     var audio = new Audio(song);
     audio.play();
@@ -42,7 +60,7 @@ let querySnapshot = await getDocs(collection(db, "currentUser", user,"favourites
             </h5>
         <div className="ml-3 mt-2 grid  lg:grid-cols-3 justify-items-center m-auto md:grid-cols-2 md:gap-x-4 grid-col-1 md:px-auto item-stretch ">
                   
-        {data
+        {dataToShow
         .map((tab,index) =>(
         
             <div id="toast-undo" class="flex items-center w-full max-w-2xl p-4 ml-3 mt-4 mr-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">
@@ -77,4 +95,3 @@ let querySnapshot = await getDocs(collection(db, "currentUser", user,"favourites
   )
 }
 
-export default Home
