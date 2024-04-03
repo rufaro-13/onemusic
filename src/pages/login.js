@@ -1,13 +1,12 @@
 "use client";
 import React from "react";
 import { useState } from "react";
-import { initializeApp } from 'firebase/app';
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import {  Label, TextInput } from "flowbite-react";
-import * as firebase from 'firebase/app';
+/* import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-
-const firebaseConfig = {
+import firebaseConfig from "../components/firebase"; */
+/* const firebaseConfig = {
     apiKey: "AIzaSyApeljgdOjZ651k8a-1ppCWNImHYvcjrmk",
     authDomain: "onemusic-f0b73.firebaseapp.com",
     projectId: "onemusic-f0b73",
@@ -15,15 +14,15 @@ const firebaseConfig = {
     messagingSenderId: "583930565232",
     appId: "1:583930565232:web:7acd0f9503943214761ab5",
     measurementId: "G-FYLV9F3N27"
-  };
+  }; */
   
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+/* const app = initializeApp(firebaseConfig); */
+/* const analytics = getAnalytics(app); */
 export default function Login(){
 
-    firebase.initializeApp();
-     const [result, setResult] = useState("");
+   // firebase.initializeApp();
+     
      const [email, setEmail] = useState("");
      const [password, setPassword] = useState("");
     
@@ -38,7 +37,7 @@ export default function Login(){
     const handleSubmit = (e) => {
         e.preventDefault();
       
-    };
+    
 
     const auth = getAuth();
     signInWithEmailAndPassword(auth, email, password)
@@ -47,19 +46,17 @@ export default function Login(){
         const user = userCredential.user;
 
         if(user!==0)
-              {sessionStorage.setItem("clickedImage",user); 
-             return ( 
+              {sessionStorage.setItem("loggedUser",user.uid); 
+             return (  
           /*  navigate('/destination'); */
           window.location.href = '/home' )}
-        
 
-        window.location.href = '/home' 
-      })
+       })
       .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
+       /*  const errorCode = error.code;
+        const errorMessage = error.message; */
       });
-    
+     };
 
 
   return (
