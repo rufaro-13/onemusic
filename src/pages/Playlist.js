@@ -1,19 +1,19 @@
 import React from 'react'
 /* import {user} from './Home' */
-import { doc, setDoc } from "firebase/firestore"; 
+//import { doc, setDoc } from "firebase/firestore"; 
 import { MdOutlinePlaylistAdd } from "react-icons/md";
 import { IconContext } from "react-icons";
-import { initializeApp } from "firebase/app";
+/* import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import firebaseConfig from "../components/firebase";
-import { useState} from 'react';
+import { useState} from 'react'; */
 
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+//const app = initializeApp(firebaseConfig);
+//const db = getFirestore(app);
 function Playlist() {
 
-    const [link, setLink] = useState("");
+   // const [link, setLink] = useState("");
 
     async function createPlaylist()
     {
