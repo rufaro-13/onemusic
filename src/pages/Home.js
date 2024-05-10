@@ -1,23 +1,24 @@
 "use client";
 /* import { Card } from "flowbite-react"; */
-import React from 'react'
+import React, { useCallback } from 'react'
 import { useEffect,useState} from 'react';
+import { FaCloudUploadAlt } from "react-icons/fa";
 import { BsFillFileMusicFill } from "react-icons/bs";
 import { IconContext } from "react-icons";
-import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
-import firebaseConfig from "../components/firebase";
-import { collection,  getDocs} from "firebase/firestore"; 
-import { getStorage, ref, getDownloadURL } from "firebase/storage";
+//import { initializeApp } from "firebase/app";
+//import { getFirestore } from "firebase/firestore";
+//import firebaseConfig from "../components/firebase";
+//import { collection,  getDocs} from "firebase/firestore"; 
+import { getStorage, ref, getDownloadURL, list} from "firebase/storage";
+//import { tracks } from '../data/tracks'; 
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
+//const app = initializeApp(firebaseConfig);
 // Create a reference from a Google Cloud Storage URI
 const storage = getStorage();
-
-
-var user =sessionStorage.getItem("loggedUser")
-const db = getFirestore(app);
+const user =sessionStorage.getItem("loggedUser")
+const listRef = ref(storage, user);
+//const db = getFirestore(app);
 
 // Query a reference to a subcollection
 
@@ -26,95 +27,214 @@ export default  function Home()  {
  
   /* const [isMusic, isMusicSet] = useState(false);
   const [playing, setPlaying] = useState("");
-const [link, setLink] = useState("");
+
   const url = "";
 
   const audioRef = useRef(new Audio(url)); */
- const [dataToShow, setData] = useState([]);
- 
+ //const [dataToShow, setData] = useState([]);
+ const [allSongs, setAllSongs] = useState([]);
+ const [link, setLink] = useState([]);
  
   function toggleMusic (sing)  {
-    console.log('the data is', dataToShow)
+    console.log('the data is', allSongs)
     let i=0;
     if(sing!==0)
     {/* localStorage["employees"] = (json); */
 
-    for( i = 0; i < dataToShow.length; i += 1) {
-      if(dataToShow[i].id === sing) {
+    for( i = 0; i < allSongs.length; i += 1) {
+      if(allSongs[i].id === sing) {
           sing = i;
       }
   }
-      sessionStorage.setItem("tab",JSON.stringify(dataToShow));
+      //sessionStorage.setItem("tab",JSON.stringify(dataToShow));
+      sessionStorage.setItem("tab",JSON.stringify(allSongs));
     sessionStorage.setItem("ind",sing); 
     return ( 
- window.location.href = '/audio_player'
+ window.location.href = '/main/audio_player'
 ) }} ;
     
    
- function extractlink(x)
+ /* async function extractlink(x)
+ {
+ const result=
+   await getDownloadURL(ref(storage,( x)))
+  .then((url) =>  {
+     
+    x=url;
+  
+    setLink(url);
+    return url
+ 
+  })
+  .catch((error) => {
+    // Handle any errors
+  });
+  return result
+  
+ } */
+
+ /*  function downloadlink(x)
  {
  
-  getDownloadURL(ref(storage, x))
+  const m = getDownloadURL(ref(storage,x))
   .then((url) => {
     
-    x=url;
+    x= url;
    
-    //setLink(url);
- //return url
+    /* setLink(x);
+  return x 
   })
   .catch((error) => {
     // Handle any errors
   });
-  
-  return x;
-  
- }
 
+  
+  return m;
+  
+ }*/
+
+  /* const listSongs =  useCallback(async()=>
+ {// Find all the prefixes and items.
+   
+   let isMounted = true;
+   const firstPage = await list(listRef);
+   const data =[]
+   // Use the result.
+   // processItems(firstPage.items)
+   // processPrefixes(firstPage.prefixes)
+  var i=0;
+
+      firstPage.items.forEach(async (itemRef) => {
+       
+        var link1 = 'gs://onemusic-f0b73.appspot.com/'+user+'/'+itemRef.name;
+         
+         getDownloadURL(ref(storage,('/'+user+'/'+itemRef.name)))
+        .then((url) => {
+          
+          data[i].push({src: url})
+          setLink(url);
+        return url
+        })
+        .catch((error) => {
+          // Handle any errors
+        }); 
  
+        extractlink(link1);
+       //
+       //let m = downloadlink(link1).finally(x=>x)
+         data.push({id: i, title: itemRef.name, src: link ,date: itemRef.date})
+       
+        i=i+1;
+      });
+   // Fetch the second page if there are more elements.
+   if (firstPage.nextPageToken) {
+     const secondPage = await list(listRef, {
+       maxResults: 100,
+       pageToken: firstPage.nextPageToken,
+     });
+     // processItems(secondPage.items)
+     // processPrefixes(secondPage.prefixes)
+   }
+   
+     
+    setAllSongs(data);
+   
+   console.log('the songs are',allSongs)
+
+ },[allSongs,link]) */
+
+ function onUpload()
+ {
+  sessionStorage.setItem("user",user); 
+  return ( 
+window.location.href = '/main/upload'
+) }
+ 
+ 
+const doFetch = useCallback(async () => {
+
+  
+  const firstPage = await list(listRef);
+const data =[]
+const lien = []
+// Use the result.
+// processItems(firstPage.items)
+// processPrefixes(firstPage.prefixes)
+
+  var i=0;
+   firstPage.items.forEach( (itemRef) => {
+    
+      getDownloadURL(ref(storage,('/'+user+'/'+itemRef.name)))
+     .then((url) => {
+       
+       lien.push(url);
+     setLink(lien)
+     return url
+     })
+     .catch((error) => {
+       // Handle any errors
+     }); 
+
+      data.push({id: i, title: itemRef.name,src: link[i],date: itemRef.date});
+    
+     i=i+1;
+   });
+// Fetch the second page if there are more elements.
+/* if (firstPage.nextPageToken) {
+  const secondPage = await list(listRef, {
+    maxResults: 100,
+    pageToken: firstPage.nextPageToken,
+  }); */
+  // processItems(secondPage.items)
+  // processPrefixes(secondPage.prefixes)
+//}
+/* return [lien,data]*/
+   ;
+console.log('the link 2 are',link);
+/*  for (i=0;i<data.length;i++)
+{  console.log('the link',i,' is',lien[i]);
+   var str = link[i];
+   data[i].src = str;
+}   */
+  setAllSongs(data); 
+ 
+console.log('the songs are',allSongs) 
+
+},[link,allSongs]);
+
   useEffect(() => {
     let isMounted = true;
-  
-    const doFetch = async () => {
-  let querySnapshot =await  getDocs(collection(db, "currentUser", user,"favourites")); 
-  const data = [];
-  console.log("there are",querySnapshot.size,"documents");
-  
-  querySnapshot.forEach((doc) => {
-    // doc.data() is never undefined for query doc snapshots
-    //console.log(doc.id, " => ", doc.data());
-  
-   /*  getDownloadURL(ref(storage, (doc.data().song)),doc)
-  .then((url) => {
-    
-    data.push({id: doc.data().id, name: doc.data().name, src: url, date: doc.data().date});
    
-    setLink(url);
- //return url
-  })
-  .catch((error) => {
-    // Handle any errors
-  }); 
-   */
- let m = extractlink(doc.data().song)
- data.push({id: doc.data().id, name: doc.data().name, src: m, date: doc.data().date});
-  });
-  if (isMounted) setData(data); 
-  console.log('the data is', dataToShow)
+    
+  /* var songs = */ doFetch() // start the async work
+  
 
-};
-  doFetch() // start the async work
   .catch((err) => {
     if (!isMounted) return; // unmounted, ignore.
     // TODO: Handle errors in your component
     console.error("failed to fetch data", err);
   });
 
+  /* var song=songs[0];
+  var lin=songs[1];
+
+  console.log('the link 2 are',lin);
+ for (i=0;i<allSongs.length;i++)
+{  console.log('the link',i,' is',link[i]);
+   var str = link[i];
+   data[i].src = str;
+}  
+  setAllSongs(data); 
+ 
+console.log('the songs are',allSongs) */ 
+
+
 return () => {
   isMounted = false;
 };
 
 
-}, );
+},[doFetch] );
 
 /* const play = () => {
     setPlaying(true);
@@ -147,13 +267,24 @@ return () => {
     
   return (
     <div>
+        <div className='grid grid-flow-row-dense mt-3 grid-cols-2 justify-items-stretch'> 
+          <div className='col-span-1'><h5 className=" ml-3 text-xl font-bold tracking-tight text-gray-900 dark:text-white">
+              Popular
+          </h5></div>
 
-            <h5 className=" ml-3 text-xl font-bold tracking-tight text-gray-900 dark:text-white">
-                Popular
-            </h5>
+          <div className='justify-self-end w-fit col-span-1'>
+          <IconContext.Provider value={{ color: '#10439F', size: '40px', padding:'1px 1px' }}>
+                            
+                              <div className="  sm:items-center sm:justify-center  ">
+                            
+                            < FaCloudUploadAlt className="sm:items-center sm:justify-center mx-6 my-1" onClick={() =>{onUpload()}}/>
+                            </div>
+                          </IconContext.Provider>
+          </div>
+        </div>
         <div className="ml-3 mt-2 grid  lg:grid-cols-3 justify-items-center m-auto md:grid-cols-2 md:gap-x-4 grid-col-1 md:px-auto item-stretch ">
         <ol>        
-        {dataToShow
+        {allSongs
         .map((tab,index) =>(
           <li>
             <div id="toast-undo"key={index} className="flex items-center w-full max-w-2xl p-4 ml-3 mt-4 mr-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">
@@ -165,7 +296,7 @@ return () => {
                             </div></a>
                           </IconContext.Provider>
                 <div className="mx 3 text-sm font-normal">
-                  {tab.name}
+                  {tab.title}
                 </div>
                 <div className="flex items-center ms-auto space-x-2 rtl:space-x-reverse">
                     <a className="text-sm font-medium text-blue-600 p-1.5 hover:bg-blue-100 rounded-lg dark:text-blue-500 dark:hover:bg-gray-700" href="/">Undo</a>

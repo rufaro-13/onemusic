@@ -26,7 +26,7 @@ const DisplayTrack = ({ currentTrack, audioRef,setDuration,progressBarRef,handle
           )}
         </div>
         <div className="text">
-          <p className="title">{currentTrack.name}</p>
+          <p className="title">{currentTrack.title}</p>
          
         </div>
       </div>

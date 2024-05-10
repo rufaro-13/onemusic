@@ -50,6 +50,7 @@ const Controls = ({
   }, [audioRef, duration, progressBarRef, setTimeProgress]);
 
   useEffect(() => {
+    
     if (isPlaying) {
       audioRef.current.play();
     } else {

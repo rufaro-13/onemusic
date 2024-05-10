@@ -12,13 +12,13 @@ function NavigBar() {
       </Navbar.Brand>
       
       <Navbar.Collapse>
-        <Navbar.Link href="#" active>
+        <Navbar.Link href="/main" active>
           Home
         </Navbar.Link>
         <Navbar.Link href="#">Library</Navbar.Link>
-        <Navbar.Link href="#">Services</Navbar.Link>
+        <Navbar.Link href="/main/playlist">Playlists</Navbar.Link>
         <Navbar.Link href="#">Search</Navbar.Link>
-        <Navbar.Link href="#">Contact</Navbar.Link>
+        <Navbar.Link href="/main/playlist">Contact</Navbar.Link>
       </Navbar.Collapse>
 
       <div className="flex md:order-2">

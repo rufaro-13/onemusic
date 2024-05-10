@@ -10,7 +10,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyApeljgdOjZ651k8a-1ppCWNImHYvcjrmk",
   authDomain: "onemusic-f0b73.firebaseapp.com",
   projectId: "onemusic-f0b73",
-  storageBucket: "onemusic-f0b73.appspot.com",
+  storageBucket: "gs://onemusic-f0b73.appspot.com",
   messagingSenderId: "583930565232",
   appId: "1:583930565232:web:7acd0f9503943214761ab5",
   measurementId: "G-FYLV9F3N27"

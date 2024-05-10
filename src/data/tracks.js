@@ -7,30 +7,6 @@ import cinematic from './Winky D-MuGarden ft Gemma Griffiths(Official Video) - C
 
 // audio thumbnails
 import bcg from '../pages/bcg.jpeg'
-export const tracks = [
-  {
-    title: 'Trinix ft Rushawn – Its a beautiful day',
-    src: beautiful,
-    author: 'Trinix ft Rushawn',
-    thumbnail: bcg
-  },
-  {
-    title: 'Michael Jackson – We Are The World',
-    src: world,
-   /*  author: 'Michael Jackson',
-    thumbnail: bcg */
-  },
-  {
-    title: 'D’banj -Top Of The World',
-    src: top,
-    /* author: 'Dbanj',
-    thumbnail: bcg */
-  },
-  {
-    title: 'Cinematic Time Lapse',
-    src: cinematic,
-    /* author: 'Lexin Music',
-    thumbnail: bcg */
-  }
-  
-];
+var list =JSON.parse(sessionStorage.getItem("tab"))
+
+export const  tracks = list;

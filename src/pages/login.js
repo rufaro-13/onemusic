@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { useState } from "react";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth,setPersistence, signInWithEmailAndPassword,browserSessionPersistence  } from "firebase/auth";
 import {  Label, TextInput } from "flowbite-react";
 /* import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
@@ -40,6 +40,23 @@ export default function Login(){
     
 
     const auth = getAuth();
+
+      
+      setPersistence(auth, browserSessionPersistence)
+  .then(() => {
+    // Existing and future Auth states are now persisted in the current
+    // session only. Closing the window would clear any existing state even
+    // if a user forgets to sign out.
+    // ...
+    // New sign-in will be persisted with session persistence.
+    return signInWithEmailAndPassword(auth, email, password);
+  })
+  .catch((error) => {
+    // Handle Errors here.
+    const errorCode = error.code;
+    const errorMessage = error.message;
+  });
+
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Signed in 
@@ -49,37 +66,40 @@ export default function Login(){
               {sessionStorage.setItem("loggedUser",user.uid); 
              return (  
           /*  navigate('/destination'); */
-          window.location.href = '/home' )}
+          window.location.href = '/main' )}
 
        })
       .catch((error) => {
        /*  const errorCode = error.code;
         const errorMessage = error.message; */
       });
+
+
      };
 
+     
 
   return (
-    <section className="mt-5 max-h-screen">
+    <section className="screen w-screen bg-hero_pattern bg-center bg-no-repeat place-content-center  bg-blend-multiply bg-cover mt-0">
       
       <div className="container h-full px-6 py-2">
-        <div className=" shadow-lg bg-white md:flex h-dvh justify-items-center w-2/3 md:px-5 pt-10 item-stretch ">
+        <div className=" shadow-lg md:flex h-dvh justify-items-center w-2/3 md:px-5 pt-10 item-stretch ">
           {/* <!-- Left column container with background--> */}
-            <div className="mb-12 mx-5 flex-1 w-full md:w-1/2 bg-white border-2 pt-12 md:mb-0 max-w-full">
+            {/* <div className="mb-12 mx-5 flex-1 w-full md:w-1/2 bg-white border-2 pt-12 md:mb-0 max-w-full">
                 <img  src="https://tecdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.svg" alt="logo" className="w-2/3" 
                 />
-            </div>
+            </div> */}
 
           {/* <!-- Right column container with form --> */}
-            <div className="justify-items-stretch w-full md:w-1/2 h-dvh bg-white rounded shadow-lg mt-2 md:pl-12 md:pr-10 pt-8 flex-1 md:max-w-1/2 max-w-full">
-            <div className="w-full md:w-68 bg-white rounded shadow-lg pl-12 pr-10 h-full flex-none max-w-full">
-                <form action="http://localhost:8000/server.php"
-                method="post" className="mx-5 pt-2 lg:pt-5" 
+            <div className="justify-items-stretch w-full md:w-1/2 h-dvh rounded shadow-lg mt-2 md:pl-12 md:pr-10 pt-8 flex-1 md:max-w-1/2 max-w-full">
+            <div className="w-full md:w-68 rounded shadow-lg pl-12 pr-10 h-full flex-none max-w-full">
+                <form 
+                method="post" className="w-3/4 mx-5 pt-2 lg:pt-5" 
                 onSubmit={(event) => handleSubmit(event)}>
                 {/* <!-- Email input --> */}
                     <div className="mx-5 w-4/5" >
                         <div className="mb-2 block">
-                        <Label htmlFor="email" value="Your email" />
+                        <Label htmlFor="email" value="Your email" className="text-blue-200"/>
                         </div>
                         <TextInput className="w-3/4" id="email" type="email" placeholder="name@flowbite.com" required 
                         
@@ -87,9 +107,9 @@ export default function Login(){
                         onChange={handleEmail}
                         />
                     </div>
-                    <div className="mx-5 w-3/4">
+                    <div className="mx-5 w-4/5">
                         <div className="mb-2 block">
-                        <Label htmlFor="password1" value="Your password" />
+                        <Label htmlFor="password1" value="Your password" className="text-blue-200"/>
                         </div>
                         <TextInput className="w-3/4" id="password1" type="password" required  value={password}
             onChange={handlePassword}/>
@@ -106,7 +126,7 @@ export default function Login(){
                                 defaultChecked
                             />
                             <label
-                                className="inline-block pl-[0.15rem] hover:cursor-pointer"
+                                className="text-white inline-block pl-[0.15rem] hover:cursor-pointer"
                                 htmlFor="exampleCheck3">
                                 Remember me
                             </label>
@@ -115,7 +135,7 @@ export default function Login(){
                         {/* <!-- Forgot password link --> */}
                         <a
                         href="#!"
-                        className="text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
+                        className="text-white transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
                         >
                         Terms and conditions
                         </a>
@@ -126,7 +146,7 @@ export default function Login(){
                     {/*  <TERipple rippleColor="light" className="w-full"> */}
                         <button
                         type="submit"
-                        className="inline-block w-full rounded bg-primary px-7 pb-2.5 pt-3 text-sm font-medium uppercase leading-normal text-green-500 shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
+                        className="inline-block w-fit rounded bg-blue-700 px-7 pb-2.5 pt-3 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
                         >
                         Login
                         </button>
