@@ -5,17 +5,17 @@ import { useEffect,useState} from 'react';
 import { FaCloudUploadAlt } from "react-icons/fa";
 import { BsFillFileMusicFill } from "react-icons/bs";
 import { IconContext } from "react-icons";
-//import { initializeApp } from "firebase/app";
+import { initializeApp } from "firebase/app";
 //import { getFirestore } from "firebase/firestore";
-//import firebaseConfig from "../components/firebase";
+import firebaseConfig from "../components/firebase";
 //import { collection,  getDocs} from "firebase/firestore"; 
 import { getStorage, ref, getDownloadURL, list} from "firebase/storage";
 //import { tracks } from '../data/tracks'; 
 
 // Initialize Firebase
-//const app = initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
 // Create a reference from a Google Cloud Storage URI
-const storage = getStorage();
+const storage = getStorage(app);
 const user =sessionStorage.getItem("loggedUser")
 const listRef = ref(storage, user);
 //const db = getFirestore(app);
