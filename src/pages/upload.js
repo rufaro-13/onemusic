@@ -3,8 +3,8 @@ import {React,useState }from 'react'
 import { Label } from "flowbite-react";
 import { initializeApp } from "firebase/app";
 import firebaseConfig from "../components/firebase";
-import { getStorage, ref, getDownloadURL,uploadBytes } from "firebase/storage";
-import { doc, setDoc,getFirestore, Timestamp } from "firebase/firestore"; 
+import { getStorage, ref, uploadBytes } from "firebase/storage";
+import { doc, setDoc,getFirestore } from "firebase/firestore"; 
 
 const app = initializeApp(firebaseConfig);
 // Create a reference from a Google Cloud Storage URI

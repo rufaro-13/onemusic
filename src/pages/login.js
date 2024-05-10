@@ -37,8 +37,6 @@ export default function Login(){
     const handleSubmit = (e) => {
         e.preventDefault();
       
-    
-
     const auth = getAuth();
 
       
@@ -55,6 +53,9 @@ export default function Login(){
     // Handle Errors here.
     const errorCode = error.code;
     const errorMessage = error.message;
+
+    console.log(errorCode);
+    console.log(errorMessage);
   });
 
     signInWithEmailAndPassword(auth, email, password)
