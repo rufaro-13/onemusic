@@ -24,7 +24,7 @@ export default function Upload() {
     function fire(src,title)
     {
       const cityRef = doc(db,'currentUser', user, 'All',title);
-      setDoc(cityRef, { src: src,title:title }, { merge: true });
+      setDoc(cityRef, { src: src,title:title,fav:false }, { merge: true });
     }
    
     const handleSubmit = (e) => {

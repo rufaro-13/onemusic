@@ -37,15 +37,15 @@ export default  function Home()  {
  
   function toggleMusic (sing)  {
     console.log('the data is', allSongs)
-    let i=0;
-    if(sing!==0)
+   // let i=0;
+    if(sing!==null)
     {/* localStorage["employees"] = (json); */
 
-    for( i = 0; i < allSongs.length; i += 1) {
+    /* for( i = 0; i <= allSongs.length-1; i += 1) {
       if(allSongs[i].id === sing) {
           sing = i;
       }
-  }
+  } */
       //sessionStorage.setItem("tab",JSON.stringify(dataToShow));
       sessionStorage.setItem("tab",JSON.stringify(allSongs));
     sessionStorage.setItem("ind",sing); 
@@ -174,7 +174,7 @@ const lien = []
      .catch((error) => {
        // Handle any errors
      }); 
-
+      
       data.push({id: i, title: itemRef.name,src: link[i],date: itemRef.date});
     
      i=i+1;

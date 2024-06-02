@@ -2,7 +2,7 @@
 import { BsMusicNoteBeamed } from 'react-icons/bs';
 import thumbnail from '../pages/bcg.jpeg'
 
-const DisplayTrack = ({ currentTrack, audioRef,setDuration,progressBarRef,handleNext,}) => {
+const DisplayTrack = ({currentTrack, audioRef,setDuration,progressBarRef,handleNext,}) => {
   
   const onLoadedMetadata = () => {
     const seconds = audioRef.current.duration;
@@ -30,6 +30,8 @@ const DisplayTrack = ({ currentTrack, audioRef,setDuration,progressBarRef,handle
          
         </div>
       </div>
+
+      
       </div>
     );
   };
