@@ -4,7 +4,6 @@ import { useState } from "react";
 import { getStorage, ref,uploadBytes, } from "firebase/storage";
 import { Link } from "react-router-dom";
 import { initializeApp } from "firebase/app";
-
 import firebaseConfig from "../components/firebase";
 
 

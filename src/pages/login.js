@@ -64,10 +64,19 @@ export default function Login(){
         const user = userCredential.user;
 
         if(user!==0)
-              {sessionStorage.setItem("loggedUser",user.uid); 
+              {
+                sessionStorage.setItem("loggedUser",user.uid);
+                sessionStorage.setItem("displayName",user.displayName);
+                sessionStorage.setItem("loggedemail",user.email);
+                
              return (  
           /*  navigate('/destination'); */
           window.location.href = '/main' )}
+
+          else
+          {
+              alert("incorrect password or user name")
+          }
 
        })
       .catch((error) => {

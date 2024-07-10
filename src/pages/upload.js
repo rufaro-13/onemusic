@@ -110,7 +110,7 @@ export default function Upload() {
                               }
                               setFile(newFiles)
                               
-                        }} />
+                         }} />
           <div>                  
             <p>List of selected files:</p><br/>
             <ul id="output"></ul>

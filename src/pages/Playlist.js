@@ -1,29 +1,36 @@
 import React from 'react'
-/* import {user} from './Home' */
-//import { doc, setDoc } from "firebase/firestore"; 
 import { MdOutlinePlaylistAdd } from "react-icons/md";
 import { IconContext } from "react-icons";
+//import { useState,useRef} from 'react';
+//import { tracks } from '../data/tracks'; 
 /* import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
-import firebaseConfig from "../components/firebase";
-import { useState} from 'react'; */
-
-
+import firebaseConfig from "../components/firebase"; */
+//import { getStorage, ref, uploadBytes } from "firebase/storage";
+/* import { doc, getDoc,setDoc,getFirestore,updateDoc,deleteDoc, collection, getDocFromServer } from "firebase/firestore"; 
+import { getStorage, ref, uploadBytes,deleteObject } from "firebase/storage"; */
+import 'firebase/firestore';
+// Create a reference from a Google Cloud Storage URI
 //const app = initializeApp(firebaseConfig);
-//const db = getFirestore(app);
+// Create a reference from a Google Cloud Storage URI
+
+/* const user = sessionStorage.getItem("loggedUser");
+const db = getFirestore(app);
+const storage = getStorage(app); */
 function Playlist() {
 
    // const [link, setLink] = useState("");
 
-    async function createPlaylist()
+   /*  async function createPlaylist()
     {
+
+      let foo = prompt('Type here');
 // Add a new document in collection "cities"
 /* await setDoc(doc(db, user, "LA"), {
     name: "Los Angeles",
     state: "CA",
     country: "USA"
   }); */
-    }
+    
   return (
     <div className='h-screen w-screen bg-home bg-center bg-no-repeat   bg-blend-multiply bg-cover'>
         
@@ -37,7 +44,7 @@ function Playlist() {
                             
                               <div className="  sm:items-center sm:justify-center  ">
                             
-                            < MdOutlinePlaylistAdd  className="sm:items-center sm:justify-center mx-6 my-1" onClick={() =>{createPlaylist()}}/>
+                            < MdOutlinePlaylistAdd  className="sm:items-center sm:justify-center mx-6 my-1" /* onClick={() =>{createPlaylist()}} *//>
                             </div>
                           </IconContext.Provider>
           </div>
@@ -48,7 +55,7 @@ function Playlist() {
                 
                     <h5 class="mb-2 text-2xl font-bold tracking-tight text-white dark:text-white">favourites</h5>
             
-                <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.</p>
+                <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">   </p>
                 
             </div>
         </div>

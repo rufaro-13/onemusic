@@ -2,14 +2,15 @@
 /* import { Card } from "flowbite-react"; */
 import React, { useCallback } from 'react'
 import { useEffect,useState} from 'react';
+import { FaTrashCan } from "react-icons/fa6";
 import { FaCloudUploadAlt } from "react-icons/fa";
 import { BsFillFileMusicFill } from "react-icons/bs";
 import { IconContext } from "react-icons";
 import { initializeApp } from "firebase/app";
-//import { getFirestore } from "firebase/firestore";
+import { getFirestore } from "firebase/firestore";
 import firebaseConfig from "../components/firebase";
-//import { collection,  getDocs} from "firebase/firestore"; 
-import { getStorage, ref, getDownloadURL, list} from "firebase/storage";
+import { deleteDoc,doc} from "firebase/firestore"; 
+import { getStorage, ref, getDownloadURL, list,deleteObject} from "firebase/storage";
 //import { tracks } from '../data/tracks'; 
 
 // Initialize Firebase
@@ -18,7 +19,7 @@ const app = initializeApp(firebaseConfig);
 const storage = getStorage(app);
 const user =sessionStorage.getItem("loggedUser")
 const listRef = ref(storage, user);
-//const db = getFirestore(app);
+const db = getFirestore(app);
 
 // Query a reference to a subcollection
 
@@ -32,6 +33,30 @@ export default  function Home()  {
 
   const audioRef = useRef(new Audio(url)); */
  //const [dataToShow, setData] = useState([]);
+
+ const deletefromAll = async (x,y) => {
+
+  //var song =x;
+  
+  console.log('the x is', x);
+  
+  await deleteDoc(doc(db,'currentUser', user, 'Favourites',x));
+
+    
+  // Create a reference to the file to delete
+  const song = ref(storage, user+'/'+x);
+
+  // Delete the file
+  deleteObject(song).then(() => {
+     alert("File deleted successfully");
+  }).catch((error) => {
+    // Uh-oh, an error occurred!
+  });
+
+   
+
+}
+ 
  const [allSongs, setAllSongs] = useState([]);
  const [link, setLink] = useState([]);
  
@@ -268,9 +293,9 @@ return () => {
   return (
     <div>
         <div className='grid grid-flow-row-dense mt-3 grid-cols-2 justify-items-stretch'> 
-          <div className='col-span-1'><h5 className=" ml-3 text-xl font-bold tracking-tight text-gray-900 dark:text-white">
+          {/* <div className='col-span-1'><h5 className=" ml-3 text-xl font-bold tracking-tight text-gray-900 dark:text-white">
               Popular
-          </h5></div>
+          </h5></div> */}
 
           <div className='justify-self-end w-fit col-span-1'>
           <IconContext.Provider value={{ color: '#10439F', size: '40px', padding:'1px 1px' }}>
@@ -282,12 +307,12 @@ return () => {
                           </IconContext.Provider>
           </div>
         </div>
-        <div className="ml-3 mt-2 grid  lg:grid-cols-3 justify-items-center m-auto md:grid-cols-2 md:gap-x-4 grid-col-1 md:px-auto item-stretch ">
+        <div className="ml-3 mt-2 grid  lg:grid-cols-1 justify-items-center m-auto md:grid-cols-2 md:gap-x-4 grid-col-1 md:px-auto item-stretch ">
         <ol>        
         {allSongs
         .map((tab,index) =>(
           <li>
-            <div id="toast-undo"key={index} className="flex items-center w-full max-w-2xl p-4 ml-3 mt-4 mr-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">
+            <div id="toast-undo"key={index} className="flex items-center w-full  p-4 ml-3 mt-4 mr-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">
                 
                 <IconContext.Provider value={{ color: '#ff0000', size: '40px', padding:'2px 2px' }}>
                             <a href="kk"><div className="  sm:items-center sm:justify-center  mx-5 mt-5 mb-5">
@@ -299,7 +324,7 @@ return () => {
                   {tab.title}
                 </div>
                 <div className="flex items-center ms-auto space-x-2 rtl:space-x-reverse">
-                    <a className="text-sm font-medium text-blue-600 p-1.5 hover:bg-blue-100 rounded-lg dark:text-blue-500 dark:hover:bg-gray-700" href="/">Undo</a>
+                   
                     <button type="button" onClick={() =>{toggleMusic(tab.id)}} className="ms-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700" data-dismiss-target="#toast-undo" aria-label="Close">
                     <span className="sr-only">Play</span>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26 26">
@@ -314,8 +339,16 @@ return () => {
                     </svg>
                 </button>
              
-                </div>   
+                </div>  
+                  <IconContext.Provider  value={{ color:'black' , size: '20px', padding:'2px 2px', className: 'heart' }}>
+                    <div className="  sm:items-center sm:justify-center  mx-5 mt-5 mb-5">
+                    
+                    <  FaTrashCan  className="sm:items-center sm:justify-center mx-6 my-1" onClick={() =>{deletefromAll(tab.title,tab.src)}}/>
+                    </div>
+                  </IconContext.Provider>
             </div>
+
+           
             </li>
         ))}
  </ol>

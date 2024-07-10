@@ -1,34 +1,42 @@
 import { useState,useRef} from 'react';
 //import { tracks } from '../data/tracks'; 
 import DisplayTrack from './DisplayTrack';
+//import Dropdown from "react-bootstrap/Dropdown";
 import Controls from './Controls';
 import ProgressBar from './ProgressBar';
 import { FaHeart } from "react-icons/fa";
+import { FaTrashCan } from "react-icons/fa6";
 import { BsFillFileMusicFill } from "react-icons/bs";
 import { IconContext } from "react-icons";
 import { initializeApp } from "firebase/app";
 import firebaseConfig from "../components/firebase";
+//import { IoMdMore } from "react-icons/io";
 //import { getStorage, ref, uploadBytes } from "firebase/storage";
-import { doc, setDoc,getFirestore,updateDoc } from "firebase/firestore"; 
-
+import { doc, setDoc,getFirestore,deleteDoc,  getDocFromServer} from "firebase/firestore"; 
+import { getStorage, ref, deleteObject } from "firebase/storage";
+import 'firebase/firestore';
 // Create a reference from a Google Cloud Storage URI
 const app = initializeApp(firebaseConfig);
 // Create a reference from a Google Cloud Storage URI
 
-const user = sessionStorage.getItem("user");
+const user = sessionStorage.getItem("loggedUser");
 const db = getFirestore(app);
+const storage = getStorage(app);
+
 var list =JSON.parse(sessionStorage.getItem("tab"))
 var sng =parseInt(sessionStorage.getItem("ind")) 
       const tracks = list
+  //    const favourites = []
 const AudioPlayer = () => {
-  //const tracks = list;
- console.log('the data is', tracks)
+ // const tracks = list;
+// console.log('the data is', tracks)
   const [trackIndex, setTrackIndex] = useState(sng);
   const [currentTrack, setCurrentTrack] = useState(tracks[trackIndex]);
   const [timeProgress, setTimeProgress] = useState(0);
   const [duration, setDuration] = useState(0);
-  console.log('the id is', trackIndex)
-  console.log('the song is', tracks[trackIndex].src)
+  //const [available, setAvailable] = useState(0);
+ /*  console.log('the id is', trackIndex)
+  console.log('the song is', tracks[trackIndex].src) */
   // reference
   const audioRef = useRef();
   const progressBarRef = useRef();
@@ -50,34 +58,111 @@ const AudioPlayer = () => {
     
   };
 
+  
+/* const colourChange = async () => {
+   for(let i = 0;i<tracks.length;i++) {
+let color = doc(db,'currentUser', user, 'Favourites',tracks[i].title);
+let docSnap = await getDoc(color);
 
-  /* for(let i = 0;i<tracks.length;i++) {
-const color = doc(db,'currentUser', user, 'Favourites',i.title);
-
-color.get().then((docSnapshot) => {
-    if (docSnapshot.exists) {
-    tracks[i].fav = "red";
+ 
+    if (docSnap.exists()) {
+    tracks[i].fav ='#EB1D36';
+    favourites[i] = '#EB1D36';
    
   }else
   {
-    tracks[i].fav = "grey";
+    tracks[i].fav = '#CFD2CF';
+    favourites[i] = '#CFD2CF';
+    }
+}};  */
 
-  }
-})}; */
+const tab = []
+const colourChange =  async  (x) => {
+ 
+let color = doc(db,'currentUser', user, 'Favourites',x);
+//var color = db.collection('currentUser').doc(user).collection('Favourites').doc(x);
+ let docSnap = await getDocFromServer(color);
+
+   if (!docSnap.exists()) 
+    {
+      //console.log(x,'the song is absent');
+     // const val = 0
+     tab.push(0)}
   
+ else
+ 
+  {// console.log(x,'the song is there');
+    //console.log("Document data:", docSnap.data());
+    tab.push(1)}
+//return available;
+} 
+//const tab = [1]
+const col=  (x,id)=>{
+ colourChange(x)
+  //let y= colourChange(x).then(function(result)  {return result});
+  //console.log(y)*/
+   /* let y = tab[0] ;
+  console.log('y is',tab[0])*/
+  return tab[id];  
+}
 
+
+
+/* async function createPlaylist(song,source)
+    {
+
+      let foo = prompt('Type here');
+
+      const plist = doc(db,'currentUser', user, foo,song);
+      setDoc(plist, { src: source,title: song }, { merge: true });
+
+       document.getElementById("playlist")
+                .innerHTML +=
+                "<Dropdown.Item>"+foo+"</Dropdown.Item><br/>"; 
+
+
+    } */
   const addToFavourites = async (x,y) => {
+
+    var song =x;
     
-    console.log('the x is', x)
-    const cityRef = doc(db,'currentUser', user, 'Favourites',x);
-      setDoc(cityRef, { src: y,title:x }, { merge: true });
-      const colourset = doc(db,'currentUser', user, 'All',x);
-      await updateDoc(colourset, { fav: true });
-    // .heart {  
-     // color: #ff0000;
-     //}
+    console.log('the x is', x);
+    
+    const cityRef = doc(db,'currentUser', user, 'Favourites',song);
+      setDoc(cityRef, { src: y,title: x }, { merge: true });
+      alert("added successfully!");
   
-};
+  }
+
+  const deletefromAll = async (x,y) => {
+
+    //var song =x;
+    
+    console.log('the x is', x);
+    
+
+    await deleteDoc(doc(db,'currentUser', user, 'Favourites',x));
+
+      
+    // Create a reference to the file to delete
+    const song = ref(storage, user+'/'+x);
+
+    // Delete the file
+    deleteObject(song).then(() => {
+       alert("File deleted successfully");
+    }).catch((error) => {
+      // Uh-oh, an error occurred!
+    });
+
+     
+  
+  }
+
+  //colourChange();
+ /*  console.log('the x is',tracks);
+  console.log('the y is', favourites); */
+     
+  
 
   return (
     <div className="audio-player">
@@ -85,7 +170,7 @@ color.get().then((docSnapshot) => {
     <DisplayTrack
             {...{currentTrack, audioRef,setDuration,progressBarRef, handleNext,
             }}
-          />
+    />
           <Controls {...{ audioRef, progressBarRef, duration,setTimeProgress,tracks,trackIndex,setTrackIndex, setCurrentTrack,handleNext, }}/>
           <ProgressBar {...{ progressBarRef, audioRef, timeProgress, duration }}/>
 
@@ -96,7 +181,8 @@ color.get().then((docSnapshot) => {
           <li>
             <div id="toast-undo"key={index} className="flex items-center w-full max-w-2xl p-2 ml-2 mt-4 mr-3 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">
                 
-                <IconContext.Provider value={{ color: '#ff0000', size: '40px', padding:'1px 1px' }}>
+              
+                <IconContext.Provider value={{ color: '#FF0000', size: '40px', padding:'1px 1px' }}>
                            <div className="  sm:items-center sm:justify-center  mx-5 mt-2 mb-2">
                             
                             < BsFillFileMusicFill className="sm:items-center sm:justify-center mx-6 my-1"/>
@@ -121,15 +207,72 @@ color.get().then((docSnapshot) => {
                     </svg>
                 </button>
 
-                
-                
-
-                <IconContext.Provider  value={{ color: tab.fav, size: '20px', padding:'2px 2px', className: 'heart' }}>
+                  
+                    {/* <IconContext.Provider  value={{ color: tab.fav, size: '20px', padding:'2px 2px', className: 'heart' }}>
                             <div className="  sm:items-center sm:justify-center  mx-5 mt-5 mb-5">
                             
-                            < FaHeart className="sm:items-center sm:justify-center mx-6 my-1" onClick={() =>{addToFavourites(tab.title,tab.src)}}/>
+                            < FaHeart  className="sm:items-center sm:justify-center mx-6 my-1" onClick={() =>{addToFavourites(tab.title,tab.src)}}/>
+                            </div>
+                          </IconContext.Provider> */}
+                         
+                   {/* {  console.log(col(tab.title),'the song is',tab.title)} */}
+                     
+
+                     {col(tab.title,tab.id) === 1 ? <IconContext.Provider  value={{ color: '#EB1D36', size: '20px', padding:'2px 2px', className: 'heart' }}>
+                            <div className="  sm:items-center sm:justify-center  mx-5 mt-5 mb-5">
+                            
+                            < FaHeart  className="sm:items-center sm:justify-center mx-6 my-1" onClick={() =>{addToFavourites(tab.title,tab.src)}}/>
                             </div>
                           </IconContext.Provider>
+                    
+                   
+                    :
+                    <IconContext.Provider  value={{ color:'#CFD2CF' , size: '20px', padding:'2px 2px', className: 'heart' }}>
+                            <div className="  sm:items-center sm:justify-center  mx-3 mt-5 mb-5">
+                            
+                            < FaHeart  className="sm:items-center sm:justify-center mx-6 my-1" onClick={() =>{addToFavourites(tab.title,tab.src)}}/>
+                            </div>
+                          </IconContext.Provider>
+                    
+                    } 
+                    <IconContext.Provider  value={{ color:'black' , size: '20px', padding:'2px 2px', className: 'heart' }}>
+                    <div className="  sm:items-center sm:justify-center  mx-5 mt-5 mb-5">
+                    
+                    <  FaTrashCan  className="sm:items-center sm:justify-center mx-6 my-1" onClick={() =>{deletefromAll(tab.title,tab.src)}}/>
+                    </div>
+                  </IconContext.Provider>
+
+
+     {/*  {(() => {
+        if (colourChange(tab.title) !== 1) { return (
+          
+            <IconContext.Provider  value={{ color: '#CFD2CF', size: '20px', padding:'2px 2px', className: 'heart' }}>
+                            <div className="  sm:items-center sm:justify-center  mx-5 mt-5 mb-5">
+                            
+                            < FaHeart  className="sm:items-center sm:justify-center mx-6 my-1" onClick={() =>{addToFavourites(tab.title,tab.src)}}/>
+                            </div>
+                          </IconContext.Provider>)
+          
+        }
+        
+        else 
+        { return  (
+              <IconContext.Provider  value={{ color:'#EB1D36' , size: '20px', padding:'2px 2px', className: 'heart' }}>
+                <div className="  sm:items-center sm:justify-center  mx-5 mt-5 mb-5">
+                
+                < FaHeart  className="sm:items-center sm:justify-center mx-6 my-1" onClick={() =>{addToFavourites(tab.title,tab.src)}}/>
+                </div>
+              </IconContext.Provider>)
+
+        }
+        
+        })()} */}
+
+
+
+
+
+                
              
                 </div>   
             </div>
